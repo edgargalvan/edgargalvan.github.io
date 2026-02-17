@@ -1,0 +1,34 @@
+<aside class="sidebar">
+  <nav>
+    <div class="nav-section">
+      <h3 class="nav-heading">Navigation</h3>
+      <ul class="nav-list">
+        <li><a href="/" {% if page.url == '/' %}class="active"{% endif %}>Home</a></li>
+        <li><a href="/projects/" {% if page.url == '/projects/' %}class="active"{% endif %}>Projects</a></li>
+        <!--<li><a href="/resume/" {% if page.url == '/resume/' %}class="active"{% endif %}>Resume</a></li>-->
+      </ul>
+    </div>
+
+    {% if site.projects.size > 0 %}
+    <div class="nav-section">
+      <h3 class="nav-heading">Projects</h3>
+      <ul class="nav-list">
+        {% assign sorted = site.projects | sort: "order" %}
+        {% for proj in sorted %}
+        <li>
+          <a href="/projects/{{ proj.slug }}/" {% if page.project == proj.slug %}class="active"{% endif %}>
+            {{ proj.title }}
+          </a>
+          {% if page.project == proj.slug %}
+          <ul class="nav-sublist">
+            <li><a href="/projects/3fund/strategy/" {% if page.url == '/projects/3fund/strategy/' %}class="active"{% endif %}>Strategy</a></li>
+            <li><a href="/projects/3fund/governance/" {% if page.url == '/projects/3fund/governance/' %}class="active"{% endif %}>AI Governance</a></li>
+          </ul>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </nav>
+</aside>

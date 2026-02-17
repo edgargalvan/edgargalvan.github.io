@@ -15,3 +15,7 @@ vendor/
 .vscode/
 .idea/
 
+# Emacs backup files
+*~
+\#*\#
+.\#*

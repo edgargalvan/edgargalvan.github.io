@@ -1,0 +1,27 @@
+title: Edgar Galvan
+description: Projects and writeups.
+baseurl: ""
+url: "https://edgargalvan.github.io"
+
+theme: minima
+
+collections:
+  projects:
+    output: false
+
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+
+markdown: kramdown
+kramdown:
+  input: GFM
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
+  - .bundle/
