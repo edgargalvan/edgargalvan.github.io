@@ -1,6 +1,6 @@
 ---
 title: 3Fund Portfolio
 slug: 3fund
-summary: A rules-based portfolio with governance, code, and rationale.
+summary: Trend-following portfolio on SPY/TLT/GLD with Faber's 200dma filter. Backtest results and an AI research process writeup.
 order: 1
 ---

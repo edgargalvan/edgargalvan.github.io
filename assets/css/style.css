@@ -146,6 +146,29 @@ main {
   margin: 1.5rem auto;
 }
 
+.page-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.page-content th,
+.page-content td {
+  border: 1px solid #374151;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.page-content th {
+  background-color: rgba(55, 65, 81, 0.3);
+  font-weight: 600;
+}
+
+.page-content tr:hover {
+  background-color: rgba(55, 65, 81, 0.15);
+}
+
 /* Audience tag — inline pill */
 .audience-tag {
   display: inline-block;
