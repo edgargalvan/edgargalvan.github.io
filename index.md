@@ -6,9 +6,9 @@ permalink: /
 
 <p class="subtitle">Engineer. Builder. Systems thinker.</p>
 
-I am a (your role/title here) at (your institution/company). My work focuses on (your research or engineering interests).
+I'm an engineer at Sandia National Laboratories. My work focuses on why we should or shouldn't trust computer models.
 
-Previously, I (brief background — education, prior roles, etc.).
+This site is where I'm exploring reviving some old hobby projects with AI.
 
 ## Links
 
