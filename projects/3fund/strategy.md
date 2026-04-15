@@ -18,8 +18,8 @@ Faber's paper treats exit to cash as a given. What if you redistribute freed cap
 
 | | Sharpe | CAGR | Max DD | $200K becomes |
 |---|---|---|---|---|
-| **Cash exit** | 1.04 | 7.9% | -14% | $918K |
-| **Renormalize** | 0.96 | 11.2% | -23% | $1.61M |
+| **Cash exit** | 1.04 | 7.9% | -14% | $825K |
+| **Renormalize** | 0.96 | 11.2% | -23% | $1.44M |
 
 ![Redistribution sweep: Sharpe stays flat while CAGR and MaxDD both rise](figures/redistribution_sweep.png)
 
@@ -42,11 +42,24 @@ Faber published the core idea in 2007 ([SSRN](https://ssrn.com/abstract=962461))
 
 The filter cuts max drawdown by 40% and improves Sharpe from 0.95 to 1.04. It costs ~1.3% CAGR. That's the price of trend following.
 
-Adding 200dma to 60/40 gets to 0.92 Sharpe; replacing AGG with GLD gets to 1.04. Faber's 5-asset has the shallowest drawdown (-15.8%) but DBC and VNQ drag CAGR to 5.1%. Caveat: comparison only runs from ~2007 due to ETF availability; Faber tested from 1972 with index data.
+Adding 200dma to 60/40 gets to 0.92 Sharpe; replacing AGG with GLD gets to 1.04. Among benchmarks, Faber's 5-asset has the shallowest drawdown (-15.8%) but DBC and VNQ drag CAGR to 5.1%. Caveat: comparison only runs from ~2007 due to ETF availability; Faber tested from 1972 with index data.
 
-![Equity curves: all strategies and benchmarks over 18 years](figures/full_period_equity_curves.png)
+![Equity curves: all strategies and benchmarks over 19 years](figures/full_period_equity_curves.png)
 
 ![Drawdowns: the filter dodges the GFC and limits 2022](figures/full_period_drawdowns.png)
+
+## The Rules
+
+All four strategies share the same mechanics:
+
+1. **Universe**: SPY, TLT, GLD
+2. **Signal**: 200-day SMA, evaluated on the last trading day of each month
+3. **Filter**: If a fund closes below its 200dma on month-end, it's "out" for the next month
+4. **Weights**: Equal (33/33/33) or momentum-ranked (70/20/10 by 12-1 momentum)
+5. **Exit mode**: Cash (reduce exposure) or renormalize (redistribute to survivors)
+6. **Rebalance**: Monthly, on the last trading day
+
+No machine learning, no regime detection. Just a moving average and a monthly check.
 
 ## The Redistribution Dial
 
@@ -55,14 +68,6 @@ When a fund drops below its 200dma, its weight is freed:
 - **0% (cash exit):** Freed weight goes to cash (SHY). Conservative.
 - **100% (renormalize):** Freed weight splits among survivors. Stays ~100% invested. Aggressive.
 - **In between:** X% to cash, (100-X)% to survivors.
-
-| Redistribution % | Sharpe | CAGR | Max Drawdown |
-|---|---|---|---|
-| 0% (cash exit) | 1.04 | 7.9% | -13.8% |
-| 25% | 1.03 | 8.7% | -15.2% |
-| 50% | 1.01 | 9.6% | -17.4% |
-| 75% | 0.99 | 10.4% | -19.6% |
-| 100% (renormalize) | 0.96 | 11.2% | -22.6% |
 
 ![Redistribution scatter — risk-return tradeoff with benchmarks](figures/redistribution_scatter.png)
 
@@ -80,18 +85,18 @@ Instead of equal-weighting, rank survivors by trailing 12-month return (ex last 
 |---|---|---|---|
 | CAGR | 7.9% | 9.4% | +1.5% |
 | Max Drawdown | -13.8% | -16.9% | -3.1% |
-| Sharpe | 1.04 | 0.98 | -0.06 |
-| $200K becomes | $918K | $1.06M | +$142K |
+| Sharpe | 1.04 | 0.99 | -0.06 |
+| $200K becomes | $825K | $1.07M | +$243K |
 
-Full-period, momentum trades 0.06 Sharpe for +1.5% CAGR. The cost is real; so is the pickup.
+Full-period, momentum trades ~0.05 Sharpe for +1.5% CAGR. The cost is real; so is the pickup.
 
 But look at the windows:
 
 | Start Date | EW-cash Sharpe | Momentum Sharpe | Winner |
 |---|---|---|---|
-| Full Period (2007) | 1.04 | 0.98 | EW |
-| Post-GFC (2009) | 1.011 | 1.014 | Momentum |
-| All Tickers (2011) | 0.97 | 1.05 | Momentum |
+| Full Period (2007) | 1.04 | 0.99 | EW |
+| Post-GFC (2009) | 1.015 | 1.018 | Momentum |
+| All Tickers (2011) | 0.97 | 1.06 | Momentum |
 | Pre-COVID (2018) | 0.98 | 1.09 | Momentum |
 | Post-COVID (2021) | 0.92 | 1.28 | Momentum |
 
@@ -138,7 +143,7 @@ The strategy underperforms every benchmark on CAGR. At 0%, you're earning 6.7% w
 
 What 0% buys you: -8.2% max drawdown, shallower than even All-Weather-Lite. At 100%, you're closer to benchmark returns but at -22.6% drawdown.
 
-This is the fundamental tradeoff. The filter protects in crises and drags in calm markets. Over 18 years that include both crises, risk-adjusted returns are strong. Exclude those crises, and they aren't.
+This is the fundamental tradeoff. The filter protects in crises and drags in calm markets. Over 19 years that include both crises, risk-adjusted returns are strong. Exclude those crises, and they aren't. Two out-of-sample crises of different types (credit-driven GFC, rate-driven 2022), and the strategy handled both. But two data points is two data points.
 
 ### The 2022-2023 specifics
 
@@ -150,16 +155,6 @@ This is the fundamental tradeoff. The filter protects in crises and drags in cal
 - Show numbers: what the filter saved in 2022 vs what it missed in 2023
 - Net result was still positive but this is the price of trend following: you give up recovery upside to avoid drawdown.]
 
-### Tax considerations
-
-Monthly filter generates short-term capital gains. Turnover is low (a few round-trips per year) but exits within 12 months are taxed at ordinary income rate. Best in tax-advantaged accounts.
-
-## What the Numbers Really Mean
-
-The GFC and 2022 are the only two sustained multi-asset drawdowns in the 18-year sample. Everything else is a short crash (COVID) or a calm bull market where the filter never fires. Two out-of-sample crises of different types (credit-driven GFC, rate-driven 2022), and the strategy handled both. But two data points is two data points. In a calm market, this is just equal-weight buy-and-hold with a monthly check that never triggers.
-
-![EW redistribution sweep across all 6 time windows — the pattern is stable](figures/overlay_ew_all_windows.png)
-
 ## Current Positioning (as of Feb 2026)
 
 All three funds are above their 200-day moving averages. 12-1 momentum readings:
@@ -170,10 +165,8 @@ All three funds are above their 200-day moving averages. 12-1 momentum readings:
 
 | Strategy | SPY | TLT | GLD | Cash |
 |---|---|---|---|---|
-| EW-cash | 33% | 33% | 33% | 0% |
-| EW-renorm | 33% | 33% | 33% | 0% |
-| Momentum-cash | 20% | 10% | 70% | 0% |
-| Momentum-renorm | 20% | 10% | 70% | 0% |
+| Equal weight | 33% | 33% | 33% | 0% |
+| Momentum | 20% | 10% | 70% | 0% |
 
 With all three above trend, cash exit vs renormalize disappears. Both are fully invested. The only difference is equal weight vs momentum-tilted toward gold.
 
@@ -181,11 +174,13 @@ With all three above trend, cash exit vs renormalize disappears. Both are fully 
 
 **EW-cash**: One rule, one action, equal weights. Nothing to overfit or second-guess. ~14% max drawdown.
 
-**EW-renorm**: Same mechanics, but freed weight goes to survivors instead of cash. $200K becomes $1.61M instead of $918K over 18 years, but you'll sit through 22% drawdowns.
+**EW-renorm**: Same mechanics, but freed weight goes to survivors instead of cash. $200K becomes $1.44M instead of $825K over 19 years, but you'll sit through 22% drawdowns.
 
 **Momentum-cash** if you believe asset class divergence will persist. Rank survivors by trailing momentum and tilt 70/20/10. Wins every window from 2009 forward, but that edge may not last.
 
-**Momentum-renorm**: Maximum growth, maximum risk. 13.1% CAGR, $1.98M terminal value on $200K. You're running concentrated bets, fully invested, with -21% drawdowns.
+**Momentum-renorm**: Maximum growth, maximum risk. 13.0% CAGR, $1.94M terminal value on $200K. You're running concentrated bets, fully invested, with -22% drawdowns.
+
+Monthly rebalancing generates short-term capital gains on exits. Turnover is low (a few round-trips per year), but exits within 12 months are taxed as ordinary income. Best run in a tax-advantaged account.
 
 ## Try It Yourself
 
@@ -199,19 +194,6 @@ Config-driven: you edit a YAML file, not Python code. You can:
 - Compare against benchmarks
 
 The repo includes an AI governance document for honest testing, designed to work with or without a coding agent.
-
-## The Rules
-
-All four strategies share the same mechanics:
-
-1. **Universe**: SPY, TLT, GLD
-2. **Signal**: 200-day SMA, evaluated on the last trading day of each month
-3. **Filter**: If a fund closes below its 200dma on month-end, it's "out" for the next month
-4. **Weights**: Equal (33/33/33) or momentum-ranked (70/20/10 by 12-1 momentum)
-5. **Exit mode**: Cash (reduce exposure) or renormalize (redistribute to survivors)
-6. **Rebalance**: Monthly, on the last trading day
-
-No machine learning, no regime detection. Just a moving average and a monthly check.
 
 ---
 
