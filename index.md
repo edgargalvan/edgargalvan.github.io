@@ -19,3 +19,4 @@ This site is where I'm exploring reviving some old hobby projects with AI.
 ## Selected Projects
 
 - [3Fund Portfolio](/projects/3fund/) — A rules-based portfolio with governance, code, and rationale.
+- [Hierarchical Bayesian NFL Model](/projects/bayes-nfl/) — PyMC v5 model for NFL game outcomes. Interpretability and calibration over raw accuracy. *Work in progress.*
